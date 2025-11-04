@@ -76,7 +76,10 @@ By default, it’s configured to test the [Sauce Demo](https://www.saucedemo.com
 
 | Command                         | Description                                |
 | ------------------------------- | ------------------------------------------ |
-| `npm test`                      | Run all tests (default)                    |
+| `npm test`                      | Run **End-to-End (E2E)** tests (default)   |
+| `npm run test:visual`           | Run **Visual Regression** tests            |
+| `npm run test:api`              | Run **API** tests                          |
+| `npm run test:a11y`             | Run **Accessibility (A11Y)** tests         |
 | `npm run test:headed`           | Run tests in headed mode                   |
 | `npm run test:single:thread`    | Run tests sequentially (single thread)     |
 | `npm run open:report`           | Open the HTML test report                  |
@@ -86,10 +89,8 @@ By default, it’s configured to test the [Sauce Demo](https://www.saucedemo.com
 | `npm run run:last:failed:tests` | Re-run only failed tests                   |
 | `npm run open:user-interface`   | Open Playwright UI mode                    |
 | `npm run record`                | Start Playwright’s Codegen tool            |
-| `npm run test:visual`           | Run visual regression tests                |
-| `npm run test:a11y`             | Run accessibility tests                    |
-| `npm run test:api`              | Run API tests                              |
 | `npm run format`                | Format code with Prettier                  |
+
 
 ---
 
@@ -204,8 +205,19 @@ export class LoginPage {
 Run it:
 
 ```bash
+# Run End-to-End tests
 npm test
+
+# Run Visual Regression tests
+npm run test:visual
+
+# Run API tests
+npm run test:api
+
+# Run Accessibility (A11Y) tests
+npm run test:a11y
 ```
+
 
 ---
 
