@@ -2,7 +2,7 @@
 
 ![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-green.svg)
 ![Playwright](https://img.shields.io/badge/Playwright-%5E1.48-blue?logo=playwright)
-![Build Status](https://img.shields.io/github/actions/workflow/status/<your-username>/playwright-boilerplate/ci.yml?branch=main)
+![Build Status](https://img.shields.io/github/actions/workflow/status/GetaUlici/playwright-boilerplate-tai/playwright.yml?branch=main)
 ![Prettier](https://img.shields.io/badge/code%20style-prettier-ff69b4.svg)
 
 A **modern test automation boilerplate** built with [Playwright](https://playwright.dev).
