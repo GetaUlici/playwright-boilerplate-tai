@@ -91,7 +91,6 @@ By default, it’s configured to test the [Sauce Demo](https://www.saucedemo.com
 | `npm run record`                | Start Playwright’s Codegen tool            |
 | `npm run format`                | Format code with Prettier                  |
 
-
 ---
 
 ## 🧩 Test Types
@@ -218,7 +217,6 @@ npm run test:api
 npm run test:a11y
 ```
 
-
 ---
 
 ## 🔁 CI/CD Integration
@@ -236,16 +234,19 @@ Easily integrate with **GitHub Actions**, **Jenkins**, or **Azure Pipelines**.
 
 ## 📦 Dependencies
 
-### Main
-
 - [`@playwright/test`](https://playwright.dev/)
 - [`@axe-core/playwright`](https://www.npmjs.com/package/@axe-core/playwright)
 - [`@faker-js/faker`](https://www.npmjs.com/package/@faker-js/faker)
 - [`playwright-schema-validator`](https://www.npmjs.com/package/playwright-schema-validator)
 - [`zod`](https://www.npmjs.com/package/zod)
-
-### Dev
-
 - [`cross-env`](https://www.npmjs.com/package/cross-env)
 - [`dotenv`](https://www.npmjs.com/package/dotenv)
 - [`prettier`](https://prettier.io/)
+
+---
+
+## ⚠️ Disclaimer
+
+> **Note:** Including a `.env` file in version control is **not a recommended practice** for production or collaborative projects, as it may expose sensitive information such as API keys or credentials.
+>
+> For demonstration purposes **only**, the `.env` file has been intentionally committed to this repository.
