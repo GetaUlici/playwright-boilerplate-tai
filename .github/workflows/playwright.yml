@@ -147,22 +147,74 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Download all blob reports
+      # Download and merge E2E tests
+      - name: Download E2E blob reports
         uses: actions/download-artifact@v4
         with:
-          path: ./all-blob-reports
-          pattern: blob-report-*
+          path: ./e2e-blob-reports
+          pattern: blob-report-e2e-*
           merge-multiple: true
 
-      - name: Merge all blob reports into a single HTML report
+      # Download and merge API tests
+      - name: Download API blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: ./api-blob-reports
+          pattern: blob-report-api-*
+          merge-multiple: true
+
+      # Download and merge A11Y tests
+      - name: Download A11Y blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: ./a11y-blob-reports
+          pattern: blob-report-a11y-*
+          merge-multiple: true
+
+      # Download Visual tests
+      - name: Download Visual blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: ./visual-blob-reports
+          pattern: blob-report-visual
+          merge-multiple: true
+
+      - name: Create merge config
         run: |
           echo "import { defineConfig } from '@playwright/test';
           export default defineConfig({ testDir: './tests' });" > merge.config.ts
-          npx playwright merge-reports --reporter html -c merge.config.ts ./all-blob-reports
 
-      - name: Upload merged HTML report
+      - name: Merge reports by test type
+        run: |
+          npx playwright merge-reports --reporter html -c merge.config.ts ./e2e-blob-reports --output playwright-report-e2e
+          npx playwright merge-reports --reporter html -c merge.config.ts ./api-blob-reports --output playwright-report-api
+          npx playwright merge-reports --reporter html -c merge.config.ts ./a11y-blob-reports --output playwright-report-a11y
+          npx playwright merge-reports --reporter html -c merge.config.ts ./visual-blob-reports --output playwright-report-visual
+
+      - name: Upload merged E2E report
         uses: actions/upload-artifact@v4
         with:
-          name: merged-playwright-report
-          path: playwright-report
+          name: playwright-report-e2e
+          path: playwright-report-e2e
+          retention-days: 30
+
+      - name: Upload merged API report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-api
+          path: playwright-report-api
+          retention-days: 30
+
+      - name: Upload merged A11Y report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-a11y
+          path: playwright-report-a11y
+          retention-days: 30
+
+      - name: Upload merged Visual report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-visual
+          path: playwright-report-visual
           retention-days: 30
