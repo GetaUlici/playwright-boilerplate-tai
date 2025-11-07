@@ -25,13 +25,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npm run test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: |
+          mkdir -p blob-report-e2e
+          npm run test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-e2e/
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-e2e-${{ matrix.shardIndex }}
-          path: blob-report
+          path: blob-report-e2e
           retention-days: 30
 
   visual_tests:
@@ -50,12 +52,14 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npm run test:visual
+        run: |
+          mkdir -p blob-report-visual
+          npm run test:visual --reporter=blob --output=blob-report-visual/
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: blob-report-visual
-          path: blob-report
+          path: blob-report-visual
           retention-days: 30
 
   api_tests:
@@ -76,13 +80,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npm run test:api --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: |
+          mkdir -p blob-report-api
+          npm run test:api --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-api/
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-api-${{ matrix.shardIndex }}
-          path: blob-report
+          path: blob-report-api
           retention-days: 30
 
   a11y_tests:
@@ -103,13 +109,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npm run test:a11y --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: |
+          mkdir -p blob-report-a11y
+          npm run test:a11y --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-a11y/
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-a11y-${{ matrix.shardIndex }}
-          path: blob-report
+          path: blob-report-a11y
           retention-days: 30
 
   merge_reports:
