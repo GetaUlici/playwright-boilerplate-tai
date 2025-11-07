@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-e2e-${{ matrix.shardIndex }}
-          path: blob-report-e2e
+          path: blob-report
           retention-days: 30
 
   visual_tests:
@@ -55,7 +55,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: blob-report-visual
-          path: blob-report-visual
+          path: blob-report
           retention-days: 30
 
   api_tests:
@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-api-${{ matrix.shardIndex }}
-          path: blob-report-api
+          path: blob-report
           retention-days: 30
 
   a11y_tests:
@@ -109,7 +109,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: blob-report-a11y-${{ matrix.shardIndex }}
-          path: blob-report-a11y
+          path: blob-report
           retention-days: 30
 
   merge_reports:
@@ -126,7 +126,7 @@ jobs:
       - name: Download all blob reports
         uses: actions/download-artifact@v4
         with:
-          path: all-blob-reports
+          path: ./all-blob-reports
           pattern: blob-report-*
           merge-multiple: true
 
