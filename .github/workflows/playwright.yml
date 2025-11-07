@@ -28,6 +28,10 @@ jobs:
         run: |
           mkdir -p blob-report-e2e
           npm run test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-e2e/
+      - name: Debug report folder
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -R
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -55,6 +59,10 @@ jobs:
         run: |
           mkdir -p blob-report-visual
           npm run test:visual -- --reporter=blob --output=blob-report-visual/
+      - name: Debug report folder
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -R
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
@@ -83,6 +91,10 @@ jobs:
         run: |
           mkdir -p blob-report-api
           npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-api/
+      - name: Debug report folder
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -R
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -112,6 +124,10 @@ jobs:
         run: |
           mkdir -p blob-report-a11y
           npm run test:a11y -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-a11y/
+      - name: Debug report folder
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -R
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
