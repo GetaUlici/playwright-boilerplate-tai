@@ -186,10 +186,10 @@ jobs:
 
       - name: Merge reports by test type
         run: |
-          npx playwright merge-reports --reporter html -c merge.config.ts ./e2e-blob-reports playwright-report-e2e
-          npx playwright merge-reports --reporter html -c merge.config.ts ./api-blob-reports playwright-report-api
-          npx playwright merge-reports --reporter html -c merge.config.ts ./a11y-blob-reports playwright-report-a11y
-          npx playwright merge-reports --reporter html -c merge.config.ts ./visual-blob-reports playwright-report-visual
+          npx playwright merge-reports ./e2e-blob-reports --reporter html --config merge.config.ts --output playwright-report-e2e
+          npx playwright merge-reports ./api-blob-reports --reporter html --config merge.config.ts --output playwright-report-api
+          npx playwright merge-reports ./a11y-blob-reports --reporter html --config merge.config.ts --output playwright-report-a11y
+          npx playwright merge-reports ./visual-blob-reports --reporter html --config merge.config.ts --output playwright-report-visual
 
       - name: Upload merged E2E report
         uses: actions/upload-artifact@v4
