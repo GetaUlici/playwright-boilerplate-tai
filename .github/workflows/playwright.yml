@@ -27,7 +27,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           mkdir -p blob-report-e2e
-          npm run test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-e2e/
+          npm run test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Debug report folder
         run: |
           echo "Current directory: $(pwd)"
@@ -58,7 +58,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           mkdir -p blob-report-visual
-          npm run test:visual -- --reporter=blob --output=blob-report-visual/
+          npm run test:visual --
       - name: Debug report folder
         run: |
           echo "Current directory: $(pwd)"
@@ -90,7 +90,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           mkdir -p blob-report-api
-          npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-api/
+          npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Debug report folder
         run: |
           echo "Current directory: $(pwd)"
@@ -123,7 +123,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           mkdir -p blob-report-a11y
-          npm run test:a11y -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob --output=blob-report-a11y/
+          npm run test:a11y -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Debug report folder
         run: |
           echo "Current directory: $(pwd)"
