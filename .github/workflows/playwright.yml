@@ -25,20 +25,45 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: |
-          mkdir -p blob-report-e2e
-          npm run test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-      - name: Debug report folder
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -R
+        run: npm run test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: blob-report-e2e-${{ matrix.shardIndex }}
-          path: blob-report-e2e
-          retention-days: 30
+          name: blob-report-${{ matrix.shardIndex }}
+          path: blob-report
+          retention-days: 1
+
+  merge-reports:
+    if: ${{ !cancelled() }}
+    needs: [e2e_tests]
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Download blob reports from GitHub Actions Artifacts
+      uses: actions/download-artifact@v5
+      with:
+        path: all-blob-reports
+        pattern: blob-report-*
+        merge-multiple: true
+
+    - name: Merge into HTML Report
+      run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v4
+      with:
+        name: html-report--attempt-${{ github.run_attempt }}
+        path: playwright-report
+        retention-days: 14
 
   visual_tests:
     timeout-minutes: 60
@@ -56,18 +81,12 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: |
-          mkdir -p blob-report-visual
-          npm run test:visual --
-      - name: Debug report folder
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -R
+        run: npm run test:visual
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: blob-report-visual
-          path: blob-report-visual
+          name: playwright-report-visual
+          path: playwright-report/
           retention-days: 30
 
   api_tests:
@@ -88,19 +107,12 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: |
-          mkdir -p blob-report-api
-          npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-      - name: Debug report folder
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -R
-      - name: Upload blob report to GitHub Actions Artifacts
+        run: npm run test:api
+      - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
         with:
-          name: blob-report-api-${{ matrix.shardIndex }}
-          path: blob-report-api
+          name: playwright-report-api
+          path: playwright-report/
           retention-days: 30
 
   a11y_tests:
@@ -121,100 +133,10 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: |
-          mkdir -p blob-report-a11y
-          npm run test:a11y -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-      - name: Debug report folder
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -R
-      - name: Upload blob report to GitHub Actions Artifacts
+        run: npm run test:a11y
+      - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: blob-report-a11y-${{ matrix.shardIndex }}
-          path: blob-report-a11y
-          retention-days: 30
-
-  merge_reports:
-    needs: [e2e_tests, api_tests, a11y_tests, visual_tests]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-      - name: Install dependencies
-        run: npm ci
-
-      # Download and merge E2E tests
-      - name: Download E2E blob reports
-        uses: actions/download-artifact@v4
-        with:
-          path: ./e2e-blob-reports
-          pattern: blob-report-e2e-*
-          merge-multiple: true
-
-      # Download and merge API tests
-      - name: Download API blob reports
-        uses: actions/download-artifact@v4
-        with:
-          path: ./api-blob-reports
-          pattern: blob-report-api-*
-          merge-multiple: true
-
-      # Download and merge A11Y tests
-      - name: Download A11Y blob reports
-        uses: actions/download-artifact@v4
-        with:
-          path: ./a11y-blob-reports
-          pattern: blob-report-a11y-*
-          merge-multiple: true
-
-      # Download Visual tests
-      - name: Download Visual blob reports
-        uses: actions/download-artifact@v4
-        with:
-          path: ./visual-blob-reports
-          pattern: blob-report-visual
-          merge-multiple: true
-
-      - name: Create merge config
-        run: |
-          echo "import { defineConfig } from '@playwright/test';
-          export default defineConfig({ testDir: './tests' });" > merge.config.ts
-
-      - name: Merge reports by test type
-        run: |
-          npx playwright merge-reports ./e2e-blob-reports --reporter html --config merge.config.ts --output playwright-report-e2e
-          npx playwright merge-reports ./api-blob-reports --reporter html --config merge.config.ts --output playwright-report-api
-          npx playwright merge-reports ./a11y-blob-reports --reporter html --config merge.config.ts --output playwright-report-a11y
-          npx playwright merge-reports ./visual-blob-reports --reporter html --config merge.config.ts --output playwright-report-visual
-
-      - name: Upload merged E2E report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-e2e
-          path: playwright-report-e2e
-          retention-days: 30
-
-      - name: Upload merged API report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-api
-          path: playwright-report-api
-          retention-days: 30
-
-      - name: Upload merged A11Y report
-        uses: actions/upload-artifact@v4
         with:
           name: playwright-report-a11y
-          path: playwright-report-a11y
-          retention-days: 30
-
-      - name: Upload merged Visual report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-visual
-          path: playwright-report-visual
+          path: playwright-report/
           retention-days: 30
