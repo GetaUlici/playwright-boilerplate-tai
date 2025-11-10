@@ -111,7 +111,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-api
+          name: playwright-report-api-${{ matrix.shardIndex }}
           path: playwright-report/
           retention-days: 30
 
@@ -137,6 +137,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-a11y
+          name: playwright-report-a11y-${{ matrix.shardIndex }}
           path: playwright-report/
           retention-days: 30
