@@ -10,7 +10,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? [['blob', { outputDir: 'blob-report-e2e' }]] : 'html',
+  reporter: process.env.CI ? [['blob', { outputDir: 'blob-report' }]] : 'html',
   use: {
     testIdAttribute: 'test-data',
     trace: 'retain-on-failure',
